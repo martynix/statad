@@ -18,10 +18,15 @@ colrm <- as.vector(colrm)
 zarobki <- zarobki[,-colrm]
 
 #Uporządkowanie nazw ramki danych
-colnames(zarobki) <- zarobki[1,]
+cn <- as.vector(zarobki[1,])
+cn[1] <- "Okres"
+cn[2] <- "Ogolem"
+colnames(zarobki) <- cn
 zarobki <- zarobki[-1,]
-rownames(zarobki) <- zarobki[,1]
-zarobki <- zarobki[,-1]
+rownames(zarobki) <- seq(from = 1, to = 158, by = 1)
+#zarobki <- zarobki[,-1]
+zarobki$rok <- substr(zarobki[,1], 1, 4) 
+
 
 #Podział na lata bez miesięcy
 z2010 <- as.data.frame(zarobki[1:12,])
@@ -68,20 +73,26 @@ z2023 <- cbind("Miesiąc" = c("styczeń", "luty"), z2023)
 
 #GRAFICZNA PREZENTACJA DANYCH
 #Zarobki ogolem
-install.packages("ggplot")
-library(ggplot2)
-ggplot(z2010, aes(x=z2010$Miesiąc, y=z2010$`
-Ogółem
-Grand total`)) +
-  geom_line()
 
-plot(z2010$`
-Ogółem
-Grand total`)
+install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
+library(dplyr)
 
-#Wybieram 3 cechy (kolumny), na podstawie których wyznaczę podstawowe parametry opisowe
-xValue <- 1:10
-yValue <- cumsum(rnorm(10))
-data <- data.frame(xValue,yValue)
-ggplot(data, aes(x=xValue, y=yValue)) +
-  geom_line()
+install.packages("tidyverse")
+installed.packages("plotly")
+library(tidyverse)
+library(plotly)
+
+p <- as_tibble(zarobki) %>%
+  group_by(rok) %>%
+  mutate(srednia = mean(as.numeric(Ogolem), na.rm = T)) %>%
+  slice(1) %>%
+  ungroup() %>%
+  ggplot(aes(x = rok)) +
+  geom_point(aes(y = srednia, color = "Średnie wynagrodzenie brutto")) +
+  geom_line(aes(y = srednia, color = "Średnie wynagrodzenie brutto")) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  #scale_y_continuous(labels = scales::percent) + 
+  ggtitle("Średnie wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
+  labs(x="Rok", y="Wynagrodzenie")
+ggplotly(p)
+
