@@ -25,8 +25,7 @@ colnames(zarobki) <- cn
 zarobki <- zarobki[-1,]
 rownames(zarobki) <- seq(from = 1, to = 158, by = 1)
 #zarobki <- zarobki[,-1]
-zarobki$rok <- substr(zarobki[,1], 1, 4) 
-
+zarobki$rok <- as.integer(substr(zarobki[,1], 1, 4))
 
 #Podział na lata bez miesięcy
 z2010 <- as.data.frame(zarobki[1:12,])
@@ -71,6 +70,7 @@ z2022 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", 
 z2023 <- as.data.frame(zarobki[157:158,])
 z2023 <- cbind("Miesiąc" = c("styczeń", "luty"), z2023)
 
+
 #GRAFICZNA PREZENTACJA DANYCH
 #Zarobki ogolem
 
@@ -82,17 +82,18 @@ installed.packages("plotly")
 library(tidyverse)
 library(plotly)
 
-p <- as_tibble(zarobki) %>%
+p <- (zarobki) %>%
   group_by(rok) %>%
   mutate(srednia = mean(as.numeric(Ogolem), na.rm = T)) %>%
   slice(1) %>%
   ungroup() %>%
   ggplot(aes(x = rok)) +
-  geom_point(aes(y = srednia, color = "Średnie wynagrodzenie brutto")) +
-  geom_line(aes(y = srednia, color = "Średnie wynagrodzenie brutto")) + 
+  geom_point(aes(y = srednia), color="#FCB13B") +
+  geom_line(aes(y = srednia), color="#FCB13B") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   #scale_y_continuous(labels = scales::percent) + 
   ggtitle("Średnie wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
   labs(x="Rok", y="Wynagrodzenie")
 ggplotly(p)
+
 
