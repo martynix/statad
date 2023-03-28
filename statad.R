@@ -96,4 +96,11 @@ p <- (zarobki) %>%
   labs(x="Rok", y="Wynagrodzenie")
 ggplotly(p)
 
+#ts1 <- zarobki[,1:2]
+#ts2 <- ts(ts1)
 
+sr <- (zarobki) %>%
+  group_by(rok) %>%
+  mutate(srednia = mean(as.numeric(Ogolem), na.rm = T))
+
+sr
