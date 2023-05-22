@@ -2,7 +2,7 @@ getwd()
 setwd("C:/Users/marty/Desktop/GITHUB/statad")
 
 #Instalacja pakietu do wczytywania tabeli z pliku Excela
-install.packages("readxl")
+#install.packages("readxl")
 library("readxl")
 
 #Przeciętne miesięczne wynagrodzenia brutto w sektorze przedsiębiorstw
@@ -42,8 +42,34 @@ srednia3 <- mean(zarobki1[,4])
 ochdst1 <- sd(zarobki1[,2])
 ochdst2 <- sd(zarobki1[,3])
 ochdst3 <- sd(zarobki1[,4])
+
+mediana1 <- quantile(zarobki1[,2])
+mediana1 <- mediana1[3]
+
+mediana2 <- quantile(zarobki1[,3])
+mediana2 <- mediana2[3]
+mediana2
+
+mediana3 <- quantile(zarobki1[,4])
+mediana3 <- mediana3[3]
+mediana3
+
+wsp1 <- ochdst1/srednia1*100
+wsp2<- ochdst2/srednia2 
+wsp3 <- ochdst3/srednia3
+
+war1 <- var(zarobki1[,2])
+war2 <- var(zarobki1[,3])
+war3 <- var(zarobki[,4])
+#Współczynnik zmienności:
+#poniżej 25 proc. – bardzo mała zmienność,
+#w granicach od 25 do 45 proc. – przeciętna zmienność,
+#w granicach od 45 do 100 proc. – silna zmienność,
+#powyżej 100 proc. – bardzo intensywna zmienność
+
 #Ramka danych zawierająca obliczone parametry
-param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3))
+
+param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3), "mediana"=c(mediana1,mediana2,mediana3), "współczynnik zmienności[%]"=c(wsp1,wsp2,wsp3), "wariancja"=c(war1,war2,war3))
                     
 #Podział na lata bez miesięcy
 z2010 <- as.data.frame(zarobki[1:12,])
