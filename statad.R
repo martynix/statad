@@ -15,18 +15,36 @@ zarobki <- zarobki[-(c(1,2,3,5)),]
 #Począwszy od 3 kolumny, co druga zawiera same wartości NULL
 colrm <- seq(from = 3, to = 93, by = 2)
 colrm <- as.vector(colrm)
-zarobki <- zarobki[,-colrm]
-
-#Uporządkowanie nazw ramki danych
+zarobki <- zarobki[,-colrm] #pełna tabela
 cn <- as.vector(zarobki[1,])
 cn[1] <- "Okres"
 cn[2] <- "Ogolem"
+#Uporządkowanie nazw ramki danych
 colnames(zarobki) <- cn
 zarobki <- zarobki[-1,]
 rownames(zarobki) <- seq(from = 1, to = 158, by = 1)
 #zarobki <- zarobki[,-1]
 zarobki$rok <- as.integer(substr(zarobki[,1], 1, 4))
+zarobki1 <- zarobki[,c(1,2,45,33)] #tabela z wybranymi kolumnami, na których przeprowadzono obliczenia
 
+#Obliczone parametry statystyki opisowej
+str(zarobki1)
+
+#zamiana wierszy z zarobkami na strukturę DOUBLE by można było na nich wykonać obliczenia
+zarobki1[,2] <- as.double(zarobki1[,2])
+zarobki1[,3] <- as.double(zarobki1[,3])
+zarobki1[,4] <- as.double(zarobki1[,4])
+
+srednia1 <- mean(zarobki1[,2])
+srednia2 <- mean(zarobki1[,3])
+srednia3 <- mean(zarobki1[,4])
+
+ochdst1 <- sd(zarobki1[,2])
+ochdst2 <- sd(zarobki1[,3])
+ochdst3 <- sd(zarobki1[,4])
+#Ramka danych zawierająca obliczone parametry
+param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3))
+                    
 #Podział na lata bez miesięcy
 z2010 <- as.data.frame(zarobki[1:12,])
 z2010 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
