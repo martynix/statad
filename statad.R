@@ -35,14 +35,17 @@ zarobki1[,2] <- as.double(zarobki1[,2])
 zarobki1[,3] <- as.double(zarobki1[,3])
 zarobki1[,4] <- as.double(zarobki1[,4])
 
+#1.średnia
 srednia1 <- mean(zarobki1[,2])
 srednia2 <- mean(zarobki1[,3])
 srednia3 <- mean(zarobki1[,4])
 
+#2.odchylenie standardowe
 ochdst1 <- sd(zarobki1[,2])
 ochdst2 <- sd(zarobki1[,3])
 ochdst3 <- sd(zarobki1[,4])
 
+#3.mediana
 mediana1 <- quantile(zarobki1[,2])
 mediana1 <- mediana1[3]
 
@@ -54,23 +57,51 @@ mediana3 <- quantile(zarobki1[,4])
 mediana3 <- mediana3[3]
 mediana3
 
+#4.współczynnik zmienności
 wsp1 <- ochdst1/srednia1*100
 wsp2<- ochdst2/srednia2 
 wsp3 <- ochdst3/srednia3
-
-war1 <- var(zarobki1[,2])
-war2 <- var(zarobki1[,3])
-war3 <- var(zarobki[,4])
 #Współczynnik zmienności:
 #poniżej 25 proc. – bardzo mała zmienność,
 #w granicach od 25 do 45 proc. – przeciętna zmienność,
 #w granicach od 45 do 100 proc. – silna zmienność,
 #powyżej 100 proc. – bardzo intensywna zmienność
 
-#Ramka danych zawierająca obliczone parametry
+#5.wariancja
+war1 <- var(zarobki1[,2])
+war2 <- var(zarobki1[,3])
+war3 <- var(zarobki1[,4])
 
-param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3), "mediana"=c(mediana1,mediana2,mediana3), "współczynnik zmienności[%]"=c(wsp1,wsp2,wsp3), "wariancja"=c(war1,war2,war3))
-                    
+#6.dominanta
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+dom1 <- getmode(zarobki1[,2])
+dom2 <- getmode(zarobki1[,3])
+dom3 <- getmode(zarobki1[,4])
+
+#Instalacja pakietu moments do obliczenia kurtozy i skośności
+#install.packages("moments")
+library("moments")
+
+#7.kurtoza
+k1 <- kurtosis(zarobki1[,2])
+k2 <- kurtosis(zarobki1[,3])
+k3 <- kurtosis(zarobki1[,4])
+
+#8.skośność
+sk1 <- skewness(zarobki1[,2])
+sk2 <- skewness(zarobki1[,3])
+sk3 <- skewness(zarobki1[,4])
+
+#Ramka danych zawierająca obliczone parametry
+param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3), "mediana"=c(mediana1,mediana2,mediana3), 
+                    "współczynnik zmienności[%]"=c(wsp1,wsp2,wsp3), "wariancja"=c(war1,war2,war3), "dominanta"=c(dom1,dom2,dom3), "kurtoza"=c(k1,k2,k3), "skośność"=c(sk1,sk2,sk3))
+
+rownames(param) <- c("zarobki ogółem", "informacja/komunikacja", "budownictwo")  
+
 #Podział na lata bez miesięcy
 z2010 <- as.data.frame(zarobki[1:12,])
 z2010 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
