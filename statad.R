@@ -102,7 +102,24 @@ param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie stan
 
 rownames(param) <- c("zarobki ogółem", "informacja/komunikacja", "budownictwo")  
 
-#Podział na lata bez miesięcy
+
+#GRAFICZNA PREZENTACJA DANYCH
+
+#histogramy porównujące zarobki ogółem;zarobki w sektorze informacji/komunikacji oraz zarobki ogółem;zarobki w sektorze budownictwa
+par(mfrow=c(2,1))
+par(mar=c(0,5,3,3))
+hist(zarobki1[,2], main="" , xlim=c(3000,13000), ylab="Ogółem", xlab="", ylim=c(0,50) , xaxt="n", las=1 , col="slateblue1", breaks=10)
+par(mar=c(5,5,0,3))
+hist(zarobki1[,3], main="" , xlim=c(3000,13000), ylab="informacja/komunikacja", xlab="Wysokość wynagrodzenia", ylim=c(50,0) , las=1 , col="yellow"  , breaks=10)
+
+par(mfrow=c(2,1))
+par(mar=c(0,5,3,3))
+hist(zarobki1[,2] , main="" , xlim=c(3000,10000), ylab="Ogółem", xlab="", ylim=c(0,60) , xaxt="n", las=1 , col="slateblue1", breaks=10)
+par(mar=c(5,5,0,3))
+hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wysokość wynagrodzenia", ylim=c(60,0) , las=1 , col="purple"  , breaks=10)
+
+
+#Podział na lata bez miesięcy (na potrzeby poniższego wykresu, grupowanie po latach)
 z2010 <- as.data.frame(zarobki[1:12,])
 z2010 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
                   "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2010)
@@ -146,14 +163,14 @@ z2023 <- as.data.frame(zarobki[157:158,])
 z2023 <- cbind("Miesiąc" = c("styczeń", "luty"), z2023)
 
 
-#GRAFICZNA PREZENTACJA DANYCH
+
 #Zarobki ogolem
 
-install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
+#install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
 library(dplyr)
 
-install.packages("tidyverse")
-installed.packages("plotly")
+#install.packages("tidyverse")
+#installed.packages("plotly")
 library(tidyverse)
 library(plotly)
 
@@ -170,12 +187,3 @@ p <- (zarobki) %>%
   ggtitle("Średnie wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
   labs(x="Rok", y="Wynagrodzenie")
 ggplotly(p)
-
-#ts1 <- zarobki[,1:2]
-#ts2 <- ts(ts1)
-
-sr <- (zarobki) %>%
-  group_by(rok) %>%
-  mutate(srednia = mean(as.numeric(Ogolem), na.rm = T))
-
-sr
