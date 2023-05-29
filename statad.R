@@ -118,6 +118,10 @@ hist(zarobki1[,2] , main="" , xlim=c(3000,10000), ylab="Ogółem", xlab="", ylim
 par(mar=c(5,5,0,3))
 hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wysokość wynagrodzenia", ylim=c(60,0) , las=1 , col="purple"  , breaks=10)
 
+#boxplot
+boxplot(zarobki1[,2:4],col='pink')
+
+
 
 #Podział na lata bez miesięcy (na potrzeby poniższego wykresu, grupowanie po latach)
 z2010 <- as.data.frame(zarobki[1:12,])
