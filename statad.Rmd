@@ -243,6 +243,6 @@ Ponieważ p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0.
 Dla drugiego typu:
 
 #Hipoteza dla wariancji (zarobki ogółem)
-var.test(zarobki1, zarobki1[,3], mu=5000)
+var.test(zarobki1[,2], zarobki1[,4], mu=1000)
 
 ## Opis użytych funkcji

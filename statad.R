@@ -185,5 +185,5 @@ t.test(zarobki1$Ogolem, mu=4500)
 
 #p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0
 
-#Hipoteza dla wariancji (zarobki ogółem)
-var.test(zarobki1$Ogolem, zarobki1[,3], mu=5000)
+#Hipoteza dla wariancji (zarobki ogółem) i dla sektora budownictwo
+var.test(zarobki1[,2], zarobki1[,4], mu=1000)
