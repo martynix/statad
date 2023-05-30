@@ -171,3 +171,13 @@ ggplotly(p)
 
 
 #WERYFIKACJA HIPOTEZ STATYSTYCZNYCH
+
+#Hipoteza dla średniej (zarobki ogółem)
+#H0: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) wynosi 4500
+#H1: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) nie wynosi 4500
+t.test(zarobki1$Ogolem, mu=4500)
+
+#p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0
+
+#Hipoteza dla wariancji (zarobki ogółem)
+var.test(zarobki1$Ogolem, zarobki1[,3], mu=5000)
