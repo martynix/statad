@@ -16,17 +16,21 @@ zarobki <- zarobki[-(c(1,2,3,5)),]
 colrm <- seq(from = 3, to = 93, by = 2)
 colrm <- as.vector(colrm)
 zarobki <- zarobki[,-colrm] #pełna tabela
-cn <- as.vector(zarobki[1,])
-cn[1] <- "Okres"
-cn[2] <- "Ogolem"
+#cn <- as.vector(zarobki[1,])
+#cn[1] <- "Okres"
+#cn[2] <- "Ogolem"
+#cn[3] <- "Informacja/komunikacja"
+#cn[4] <- "Budownictwo"
+
 #Uporządkowanie nazw ramki danych
-colnames(zarobki) <- cn
+#colnames(zarobki) <- cn
 zarobki <- zarobki[-1,]
 rownames(zarobki) <- seq(from = 1, to = 158, by = 1)
 #zarobki <- zarobki[,-1]
-zarobki$rok <- as.integer(substr(zarobki[,1], 1, 4))
+#zarobki$rok <- as.integer(substr(zarobki[,1], 1, 4))
 zarobki1 <- zarobki[,c(1,2,45,33)] #tabela z wybranymi kolumnami, na których przeprowadzono obliczenia
-
+zarobki1$rok <- as.integer(substr(zarobki[,1], 1, 4))
+colnames(zarobki1) <- c("Okres", "Ogółem", "Informacja/komunikacja", "Budownictwo", "rok")
 #Obliczone parametry statystyki opisowej
 str(zarobki1)
 
@@ -156,9 +160,11 @@ library(dplyr)
 library(tidyverse)
 library(plotly)
 
-p <- (zarobki) %>%
+#colnames(zarobki[,2]) <- "Ogolem"
+
+p <- (zarobki1) %>%
   group_by(rok) %>%
-  mutate(srednia = mean(as.numeric(Ogolem), na.rm = T)) %>%
+  mutate(srednia = mean(as.numeric(Ogółem), na.rm = T)) %>%
   slice(1) %>%
   ungroup() %>%
   ggplot(aes(x = rok)) +
