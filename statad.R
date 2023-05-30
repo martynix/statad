@@ -121,54 +121,32 @@ hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wyso
 #boxplot
 boxplot(zarobki1[,2:4],col='pink')
 
+#wykres dystrybuanty empirycznej wysokości wynagrodzenia (ogółem)
+ecdf(zarobki1[,2]) #funkcja wyświetlająca punkty skokowe na "surowych" danych
+#Pogrupowanie danych w celu zmniejszenia liczby punktów skokowych poprzez podział wartości na klasy
+ilosc_klas = 11
+klasy = seq(min(zarobki1[,2])-50, max(zarobki1[,2]), length.out = ilosc_klas+1)
+klasy <- round(klasy,digits=1)
+klasy
+klasy_srodki = round((klasy[-length(klasy)] + klasy[-1])/2, 1)
+klasy_srodki
 
+cut(zarobki1[,2],klasy, dig.lab=10)
+przedzialy <- table(cut(zarobki1[,2],klasy,dig.lab=10))
+przedzialy
 
-#Podział na lata bez miesięcy (na potrzeby poniższego wykresu, grupowanie po latach)
-z2010 <- as.data.frame(zarobki[1:12,])
-z2010 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                  "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2010)
-z2011 <- as.data.frame(zarobki[13:24,])
-z2011 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2011)
-z2012 <- as.data.frame(zarobki[25:36,])
-z2012 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2012)
-z2013 <- as.data.frame(zarobki[37:48,])
-z2013 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2013)
-z2014 <- as.data.frame(zarobki[49:60,])
-z2014 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2014)
-z2015 <- as.data.frame(zarobki[61:72,])
-z2015 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2015)
-z2016 <- as.data.frame(zarobki[73:84,])
-z2016 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2016)
-z2017 <- as.data.frame(zarobki[85:96,])
-z2017 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2017)
-z2018 <- as.data.frame(zarobki[97:108,])
-z2018 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2018)
-z2019 <- as.data.frame(zarobki[109:120,])
-z2019 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2019)
-z2020 <- as.data.frame(zarobki[121:132,])
-z2020 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2020)
-z2021 <- as.data.frame(zarobki[133:144,])
-z2021 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2021)
-z2022 <- as.data.frame(zarobki[145:156,])
-z2022 <- cbind("Miesiąc" = c("styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", 
-                             "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"), z2022)
-z2023 <- as.data.frame(zarobki[157:158,])
-z2023 <- cbind("Miesiąc" = c("styczeń", "luty"), z2023)
+#Dystrybuanta empiryczna na pogrupowanych danych
+ecdf(cut(zarobki1[,2],klasy, dig.lab=10))
+ecdf(cut(zarobki1[,2],klasy, dig.lab=10))(1:ilosc_klas)
 
+srodki_czestosci <- data.frame("środki klas"=klasy_srodki, "częstości skumulowane"=ecdf(cut(zarobki1[,2],klasy, dig.lab=10))(1:ilosc_klas))
+srodki_czestosci
 
+plot(ecdf(cut(zarobki1[,2],klasy, dig.lab=10)), col="orange", col.lab="red", col.main="red",
+     xlab="Zarobki", ylab="Łączna częstość", main="Dystrybuanta wysokości zarobków (ogółem)", lwd=2, xaxt="n", las=1)
+axis(side=1, at=1:ilosc_klas, labels=klasy_srodki)
 
-#Zarobki ogolem
+#Wykres średnich zarobków (ogółem) na przestrzeni lat
 
 #install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
 library(dplyr)
@@ -186,8 +164,10 @@ p <- (zarobki) %>%
   ggplot(aes(x = rok)) +
   geom_point(aes(y = srednia), color="#FCB13B") +
   geom_line(aes(y = srednia), color="#FCB13B") + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  #scale_y_continuous(labels = scales::percent) + 
+  theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1)) +
   ggtitle("Średnie wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
   labs(x="Rok", y="Wynagrodzenie")
 ggplotly(p)
+
+
+#WERYFIKACJA HIPOTEZ STATYSTYCZNYCH
