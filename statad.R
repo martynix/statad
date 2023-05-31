@@ -175,6 +175,10 @@ ggplotly(p)
 #H1: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) nie wynosi 4500
 t.test(zarobki1[,2], mu=4500)
 
+#H0: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) wynosi 3000
+#H1: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) wynosi więcej niż 3000
+t.test(zarobki1[,2], mu=3000, alternative="greater")
+
 #p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0
 
 #Hipoteza dla wariancji (zarobki ogółem) i dla sektora budownictwo

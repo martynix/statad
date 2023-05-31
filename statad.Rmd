@@ -1,7 +1,12 @@
 ---
 title: "Projekt z przedmiotu STATYSTYCZNA ANALIZA DANYCH"
-output: html_document
+author: "Martyna Pitera"
 date: "2023-05-30"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+always_allow_html: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -9,21 +14,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Użyte dane
-Na potrzeby projektu użyłam danych pochodzących ze strony Głównego Urzędu Statystycznego.\
+Na potrzeby projektu użyłam danych pochodzących ze strony Głównego Urzędu Statystycznego (https://stat.gov.pl/obszary-tematyczne/inne-opracowania/informacje-o-sytuacji-spoleczno-gospodarczej/biuletyn-statystyczny-nr-32023,4,136.html).\
 Dane te dotyczą przeciętnego miesięcznego wynagrodzenia brutto w sektorze przedsiębiorstw. Powodem wyboru takich danych była chęć porównania wysokości wynagrodzeń w różnych sektorach przedsiębiorstw. W związku z moim kierunkiem studiów, chciałam poznać średnie wynagrodzenie w sektorze informacji/komunikacji.\
 W pobranym pliku .xlsx zaprezentowano średnie wynagrodzenie brutto ogółem, ale i osobno dla każdego sektora.
+
 Do przeprowadzenia dalszych analiz wybrałam trzy kolumny (cechy): \
 1.	dotycząca ogółu wszystkich sektorów,\
 2.	dotycząca sektora informacji/komunikacji, \
-3.	dotycząca sektora budownictwa.\
+3.	dotycząca sektora budownictwa.
 
-
-```{r}
-setwd("C:/Users/marty/Desktop/GITHUB/statad")
-```
 Dane zostały wczytane przy użyciu pakietu do wczytywania tabeli z pliku Excela. Następnie je uporządkowałam, tzn. usunęłam niepotrzebne wiersze oraz kolumny wypełnione wartościami NULL. Powstałej w ten sposób ramce danych nadałam nowe nazwy wierszy i kolumn.
 
-```{r, message=FALSE}
+```{r a2, message=FALSE}
 #install.packages("readxl")
 library("readxl")
 zarobki <- read_excel("tabl19.xlsx")
@@ -31,14 +33,12 @@ zarobki <- as.data.frame(zarobki)
 zarobki <- zarobki[-(c(1,2,3,5)),]
 ```
 
-
 Utworzony poniżej wektor colrm zawiera liczby odpowiadające kolumnom, które mają zostać usunięte.
 Inaczej mówiąc, począwszy od kolumny trzeciej, co druga kolumna aż do dziewięćdziesiątej trzeciej ma zostać usunięta; zawierają one jedynie wartości NULL.
 
-Ramka danych o nazwie "zarobki" zawiera dane na temat wysokości wynagrodzenia dla wszystkich sektorów. Ramka "zarobki1" zawiera tylko pięć interesujących nas kolumn.
+Ramka danych o nazwie "zarobki" zawiera dane na temat wysokości wynagrodzenia dla wszystkich sektorów. Ramka "zarobki1" zawiera tylko interesujące nas kolumny.
 
-
-```{r}
+```{r a3}
 colrm <- seq(from = 3, to = 93, by = 2)
 colrm <- as.vector(colrm)
 zarobki <- zarobki[,-colrm] 
@@ -49,26 +49,23 @@ zarobki1$rok <- as.integer(substr(zarobki[,1], 1, 4))
 colnames(zarobki1) <- c("Okres", "Ogółem", "Informacja/komunikacja", "Budownictwo", "rok")
 ```
 
+Po wstępnej obróbce ramka danych zawierająca pożądane dane prezentuje się jak poniżej. Oczywiście zaprezentowałam tylko 10 pierwszych wierszy, ale w ramce danych jest ich znacznie więcej.
 
-Po wstępnej obróbce ramka danych zawierająca pożądane dane prezentuje się tak:
-
-
-```{r}
+```{r a4}
 zarobki1[1:10,1:4]
 ```
-
 
 ## Obliczanie wybranych parametrów statystyki opisowej
 Na podstawie ramki danych zarobki1 obliczyłam 8 parametrów statystyki opisowej dla każdej kolumny, w tym: średnią, odchylenie standardowe, medianę, współczynnik zmienności, wariancję, dominantę, kurtozę i skośność. Jednak by takie obliczenia były możliwe, wcześniej użyłam funkcji as.double(), aby nadać wartościom w ramce danych odpowiedni typ (double).
 
-odchylenie standardowe informuje o tym, jak szeroko wartości danej wielkości są rozrzucone wokół jej średniej. Im mniejsza wartość odchylenia tym obserwacje są bardziej skupione wokół średniej.
+Odchylenie standardowe informuje o tym, jak szeroko wartości danej wielkości są rozrzucone wokół jej średniej. Im mniejsza wartość odchylenia tym obserwacje są bardziej skupione wokół średniej.
 
 Mediana to wartość środkowa w uporządkowanym ciągu liczb. Oznacza to, że 50% danych jest mniejszych lub równych medianie, a 50% danych jest większych lub równych medianie. 
 
-Współczynnik zmienności, podobnie jak odchylenie standardowe, należy do miar rozproszenia, służy więc do badania stopnia zróżnicowania wartości zmiennej. Wysoka wartość współczynnika oznacza duże zróżnicowanie cechy i świadczy o niejednorodności badanej populacji. Interpretacja wartości współczynnika zmienności:
-bardzo mała zmienność — poniżej 25 proc.,
-przeciętna zmienność — w przedziale od 25 proc. do 45 proc.,
-silna zmienność — od 45 proc. do 100 proc.,
+Współczynnik zmienności, podobnie jak odchylenie standardowe, należy do miar rozproszenia, służy więc do badania stopnia zróżnicowania wartości zmiennej. Wysoka wartość współczynnika oznacza duże zróżnicowanie cechy i świadczy o niejednorodności badanej populacji. Interpretacja wartości współczynnika zmienności:\
+bardzo mała zmienność — poniżej 25 proc.,\
+przeciętna zmienność — w przedziale od 25 proc. do 45 proc.,\
+silna zmienność — od 45 proc. do 100 proc.,\
 bardzo intensywna zmienność — powyżej 100 proc.
 
 Wariancja to średnia arytmetyczna kwadratów odchyleń poszczególnych wartości cechy jednostek zbiorowości od ich wartości średniej (arytmetycznej) – kwadrat odchylenia standardowego. 
@@ -78,9 +75,9 @@ Dominanta wskazuje, jaka wartość występuje najczęściej w zbiorze wyników.
 Skośność – miara symetrii/asymetrii rozkładu. Jeśli rozkład jest idealnie symetryczny, wartość skośności wynosi zero. Z kolei jej wartości ujemne wskazuję na rozkład lewoskośny (wydłużone jest lewe ramię rozkładu), a dodatni na prawoskośny (wydłużone jest prawe ramię rozkładu).
 
 Kurtoza określa intensywność występowania wartości skrajnych, mierzy więc ona, co się dzieje w "ogonach" rozkładu.
-Wyższa kurtoza wskazuje, że dane mają grubsze ogony lub większe prawdopodobieństwo wystąpienia wartości skrajnych. Oznacza to, że istnieje większe prawdopodobieństwo wystąpienia obserwacji oddalonych od średniej.
+Wyższa kurtoza wskazuje, że dane mają grubsze ogony lub jest większe prawdopodobieństwo wystąpienia wartości skrajnych. Oznacza to, że istnieje większe prawdopodobieństwo wystąpienia obserwacji oddalonych od średniej.
 
-```{r}
+```{r a5}
 zarobki1[,2] <- as.double(zarobki1[,2])
 zarobki1[,3] <- as.double(zarobki1[,3])
 zarobki1[,4] <- as.double(zarobki1[,4])
@@ -122,7 +119,7 @@ dom3 <- getmode(zarobki1[,4])
 
 Do obliczenia kurtozy i skośności użyłam funkcji kurtosis() i skewness() z biblioteki "moments".
 
-```{r}
+```{r a6}
 #install.packages("moments")
 library("moments")
 
@@ -137,13 +134,14 @@ sk3 <- skewness(zarobki1[,4])
 
 Następnie stworzyłam ramkę danych zawierającą obliczone wyżej parametry (param).
 
-```{r}
+```{r a7, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3), "mediana"=c(mediana1,mediana2,mediana3),"współczynnik zmienności[%]"=c(wsp1,wsp2,wsp3),  "wariancja"=c(war1,war2,war3), "dominanta"=c(dom1,dom2,dom3), "kurtoza"=c(k1,k2,k3), "skośność"=c(sk1,sk2,sk3))
 rownames(param) <- c("zarobki ogółem", "informacja/komunikacja", "budownictwo")  
 param
 ```
 
-Interpretacja wyników na przykładzie kolumny dotyczącej wynagrodzenia w sektorze informacji/komunikacji:
+Interpretacja wyników na przykładzie kolumny dotyczącej wynagrodzenia w sektorze informacji/komunikacji:\
+
 Średnie miesięczne wynagrodzenie w tym sektorze wynosi 7979.005 zł brutto. Odchylenie standardowe przyjmuje większą wartość niż w przypadku dwóch pozostałych obserwacji, zatem wartości wynagrodzenia w sektorze informacji są najmocniej rozrzucone wokół średniej. Wartość środkowa wynosi 7550.26, co oznacza, że połowa wynagrodzeń jest niższa, a druga połowa równa lub wyższa od tej liczby.
 Współczynnik zmienności dla tego sektora wynosi 0.1984783, czyli mniej niż 25% - wartości zatem wykazują bardzo małą zmienność. Dominanta o wartości 5932.17 wskazuje najczęściej występującą wysokość miesięcznego wynagrodzenia w tym sektorze. Kurtoza wynosząca 2.801419 może wskazywać na grubsze ogony rozkładu. Skośność równa 0.8571349 sugeruje pewną asymetrię w rozkładzie danych.
 
@@ -151,18 +149,25 @@ Patrząc na powyższą tabelę można także wysnuć ciekawy wniosek, że:\
 a. średnie wynagrodzenie brutto w sektorze budownictwa nie odbiega mocno od średniego wynagrodzenia dla ogółu sektorów,\
 b. średnie wynagrodzenie dla sektora informacji/komunikacji znacznie je przewyższa.\
 
+\newpage
+
 ## Graficzna prezentacja danych
 
 Sporządziłam kilka wykresów, prezentujących dane.
-Poniżej znajdują się dwa histogramy. Umożliwiają one porównanie wynagrodzenia w sektorach informacji i budownictwa z tym ogólnym średnim wynagrodzeniem.
+Histogram przedstawia liczebność obserwacji w formie przedziału zmiennych. Graficzny rozkład pozwala na stwierdzenie blisko jakich wartości istnieje najwięcej, bądź najmniej wyników.
+Poniżej znajdują się dwa histogramy, umożliwiające porównanie wynagrodzenia w sektorach informacji i budownictwa z ogólnym wynagrodzeniem.
 
-```{r}
+```{r a8, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 par(mfrow=c(2,1))
 par(mar=c(0,5,3,3))
 hist(zarobki1[,2], main="" , xlim=c(3000,13000), ylab="Ogółem", xlab="", ylim=c(0,50) , xaxt="n", las=1 , col="slateblue1", breaks=10)
 par(mar=c(5,5,0,3))
 hist(zarobki1[,3], main="" , xlim=c(3000,13000), ylab="informacja/komunikacja", xlab="Wysokość wynagrodzenia", ylim=c(50,0) , las=1 , col="yellow"  , breaks=10)
+```
 
+\newpage 
+
+```{r a1, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 par(mfrow=c(2,1))
 par(mar=c(0,5,3,3))
 hist(zarobki1[,2] , main="" , xlim=c(3000,10000), ylab="Ogółem", xlab="", ylim=c(0,60) , xaxt="n", las=1 , col="slateblue1", breaks=10)
@@ -170,13 +175,14 @@ par(mar=c(5,5,0,3))
 hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wysokość wynagrodzenia", ylim=c(60,0) , las=1 , col="purple"  , breaks=10)
 ```
 
+\newpage
 
 Średnie zarobki dla wszystkich cech zostały również zobrazowane na wykresie pudełkowym.
 Ten typ wykresu niesie ze sobą sporo różnych informacji na temat rozkładu mierzonej zmiennej.\
-Górna linia pozioma wskazuje najwyższą wartość miesięcznego wynagrodzenia w danym sektorze, z kolei dolna linia pozioma - najniższy.\
+Górna linia pozioma wskazuje najwyższą wartość miesięcznego wynagrodzenia w danym sektorze, z kolei dolna linia pozioma - najniższą.\
 Górna ściana "pudełka" to trzeci kwartyl, dolna to pierwszy kwartyl, a gruba pozioma kreska znajdująca się na "pudełku" to wartość mediany.
 
-```{r}
+```{r a9}
 boxplot(zarobki1[,2:4],col='pink')
 ```
 
@@ -185,7 +191,7 @@ Funkcja ecdf() wyświetla punkty skokowe.
 Dla "surowych" danych wykres dystrybuanty byłby nieczytelny z powodu bardzo dużej ilości punktów skokowych. Zmniejszyłam ich liczbę poprzez pogrupowanie danych i podział wartości na klasy. W wyniku tego działania otrzymałam wykres dystrybuanty empirycznej nie dla pojedynczych wartości, ale dla jedenastu przedziałów, w których poszczególne wartości się mieszczą. 
 Na osi poziomej znajdują się liczby będące środkami tych przedziałów.
 
-```{r}
+```{r a10, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 ecdf(zarobki1[,2]) 
 ilosc_klas = 11
 klasy = seq(min(zarobki1[,2])-50, max(zarobki1[,2]), length.out = ilosc_klas+1)
@@ -205,7 +211,7 @@ srodki_czestosci <- data.frame("środki klas"=klasy_srodki, "częstości skumulo
 srodki_czestosci
 
 plot(ecdf(cut(zarobki1[,2],klasy, dig.lab=10)), col="orange", col.lab="red", col.main="red",
-     xlab="Miesięczne wynagrodzenie", ylab="Łączna częstość", main="Dystrybuanta wysokości miesięcznego wynagrodzenia (ogółem)", lwd=2, xaxt="n", las=1)
+xlab="Miesięczne wynagrodzenie", ylab="Łączna częstość", main="Dystrybuanta wysokości  miesięcznego wynagrodzenia (ogółem)", lwd=2, xaxt="n", las=1)
 axis(side=1, at=1:ilosc_klas, labels=klasy_srodki)
 ```
 
@@ -214,7 +220,7 @@ Kolejnym sporządzonym przeze mnie wykresem jest interaktywny wykres prezentują
 Po najechaniu myszką na wykres, pojawiają się szczegółowe informacje.
 Do stworzenia tego wykresu użyłam pakietów dplyr, tidyverse oraz plotly.
 
-```{r,message=FALSE}
+```{r a11,message=FALSE}
 #install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
 #install.packages("tidyverse")
 #installed.packages("plotly")
@@ -232,29 +238,41 @@ p <- (zarobki1) %>%
   geom_point(aes(y = srednia), color="#FCB13B") +
   geom_line(aes(y = srednia), color="#FCB13B") + 
   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1)) +
-  ggtitle("Średnie wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
+  ggtitle("Średnie miesięczne wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
   labs(x="Rok", y="Wynagrodzenie")
 ggplotly(p)
+plot(p)
+
 ```
 
 Powyższy wykres świadczy o tym, że na przełomie ostatnich lat wysokość przeciętnego miesięcznego wynagrodzenia stale wzrastała.
 
 ## Weryfikacja hipotez statystycznych
 
-Przy użyciu funkcji t.test oraz var.test zweryfikowałam dwa typy hipotez statystycznych. 
-
+Przy użyciu funkcji t.test, var.test oraz cor.test zweryfikowałam trzy typy hipotez statystycznych. 
 
 ## t.test
-Wynik testu t dla jednej próby służy do porównania średniej danej próby z pewną wartością oczekiwaną (w tym przypadku 4500).
+Wynik testu t dla jednej próby służy do porównania średniej danej próby z pewną wartością oczekiwaną.
 
-H0: Średnia wysokość miesięcznego wynagrodzenia (zarobki1$Ogolem) wynosi 4500\
-H1: Średnia wysokość miesięcznego wynagrodzenia (zarobki1$Ogolem) nie wynosi 4500\
+H0: Średnia wysokość miesięcznego wynagrodzenia (Ogółem) wynosi 4500\
+H1: Średnia wysokość miesięcznego wynagrodzenia (Ogółem) nie wynosi 4500\
 
-```{r}
+```{r a12}
 t.test(zarobki1[,2], mu=4500)
 ```
 
 Ponieważ p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0.
+
+
+H0: Średnia wysokość wynagrodzenia (Ogółem) wynosi 3000\
+H1: Średnia wysokość wynagrodzenia (Ogółem) jest większa niż 3000\
+
+```{r a13}
+t.test(zarobki1[,2], mu=3000, alternative="greater")
+```
+
+Ponieważ p-value < 2.2e-16, zatem zachodzi także p-value < 1-0.95(confidence_level).\
+Odrzucamy hipotezę H0 na rzecz hipotezy alternatywnej H1.
 
 ## var.test
 Kolejnym przeprowadzonym testem jest test F, służący do porównania dwóch wariancji. 
@@ -262,209 +280,205 @@ Kolejnym przeprowadzonym testem jest test F, służący do porównania dwóch wa
 H0: Stosunek wariancji przeciętnego miesięcznego wynagrodzenia brutto Ogółem i w sektorze budownictwa wynosi 1\
 H1: Stosunek wariancji przeciętnego miesięcznego wynagrodzenia brutto Ogółem i w sektorze budownictwa nie wynosi 1\
 
-```{r}
+```{r a14}
 var.test(zarobki1[,2], zarobki1[,4])
 ```
 
-Wartość F wynosi 1.0892, a liczba stopni swobody dla licznika i mianownika wynosi 157. \
 Ponieważ p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0, co oznacza, że nie ma istotnych statystycznie różnic między wariancjami dwóch grup.
-
 
 ## cor.test
 Trzecim przeprowadzonym testem jest test korelacji Pearsona.
 
-H0: Korelacja pomiędzy wysokościami miesięcznego wynagrodzenia dla sektorów informacji/komunikacji i budownictwa wynosi 0.
-H0: Korelacja pomiędzy wysokościami miesięcznego wynagrodzenia dla sektorów informacji/komunikacji i budownictwa nie wynosi 0.
+H0: Korelacja pomiędzy wysokościami miesięcznego wynagrodzenia dla sektorów informacji/komunikacji i budownictwa wynosi 0.\
+H1: Korelacja pomiędzy wysokościami miesięcznego wynagrodzenia dla sektorów informacji/komunikacji i budownictwa nie wynosi 0.\
 
-```{r}
-cor.test(zarobki1[,3], zarobki1[,4], mu=1000)
+```{r a15}
+cor.test(zarobki1[,3], zarobki1[,4])
 ```
 
-Wynik testu korelacji Pearsona wskazuje na bardzo silny i statystycznie istotny dodatni związek między tymi kolumnami.
-Ponieważ p-value < 2.2e-16, a zatem także p-value<0.05, to odrzucamy H0 na korzyść H1.
+Wynik testu korelacji Pearsona wskazuje na bardzo silny i statystycznie istotny dodatni związek między tymi kolumnami.\
+Ponieważ p-value < 2.2e-16, a zatem także p-value < 0.05, to odrzucamy H0 na korzyść H1.
 
 ## Opis użytych bibliotek
-library(readxl)
-Biblioteka: readxl
-Opis: Udostępnia funkcje do odczytu danych z plików Excel (.xls, .xlsx) do ramki danych w R.
+Biblioteka: readxl\
+Opis: Udostępnia funkcje do odczytu danych z plików Excel (.xls, .xlsx) do ramki danych w R.\
 
-library(moments)
-Biblioteka: moments
-Opis: Zapewnia narzędzia do analizy statystycznej i obliczania miar statystycznych, takich jak kurtoza, skośność itp.
+Biblioteka: moments\
+Opis: Zapewnia narzędzia do analizy statystycznej i obliczania miar statystycznych, takich jak kurtoza, skośność itp.\
 
-library(dplyr)
-Biblioteka: dplyr
-Opis: Udostępnia zestaw funkcji do przetwarzania danych w sposób logiczny i konkretny, np. filtrowanie, sortowanie, grupowanie, łączenie itp. Bez tego pakietu "%>%" nie zadziała.
+Biblioteka: dplyr\
+Opis: Udostępnia zestaw funkcji do przetwarzania danych w sposób logiczny i konkretny, np. filtrowanie, sortowanie, grupowanie, łączenie itp. Bez tego pakietu "%>%" nie zadziała.\
 
-library(tidyverse)
-Biblioteka: tidyverse
-Opis: Zbiór pakietów, w tym dplyr, ggplot2, tidyr itp., które ułatwiają przetwarzanie, analizę i wizualizację danych.
+Biblioteka: tidyverse\
+Opis: Zbiór pakietów, w tym dplyr, ggplot2, tidyr itp., które ułatwiają przetwarzanie, analizę i wizualizację danych.\
 
-library(plotly)
-Biblioteka: plotly
-Opis: Zapewnia narzędzia do tworzenia interaktywnych wykresów, które można eksplorować i dostosowywać w przeglądarce.
+Biblioteka: plotly\
+Opis: Zapewnia narzędzia do tworzenia interaktywnych wykresów, które można eksplorować i dostosowywać w przeglądarce.\
+
+Biblioteka: stats\
+Opis: Zawiera funkcje statystyczne i probabilistyczne, umożliwiające analizę danych, testowanie hipotez, estymację parametrów, generowanie losowych liczb oraz wiele innych operacji związanych z analizą statystyczną.\
 
 ## Opis użytych funkcji
-getwd()
-Biblioteka: base
-Opis: Zwraca bieżący katalog roboczy.
+getwd()\
+Biblioteka: base\
+Opis: Zwraca bieżący katalog roboczy.\
 
-setwd()
-Biblioteka: base
-Opis: Ustawia bieżący katalog roboczy na podany ścieżkę.
+setwd()\
+Biblioteka: base\
+Opis: Ustawia bieżący katalog roboczy na podany ścieżkę.\
 
-read_excel()
-Biblioteka: readxl
-Opis: Wczytuje dane z pliku Excela do ramki danych.
+read_excel()\
+Biblioteka: readxl\
+Opis: Wczytuje dane z pliku Excela do ramki danych.\
 
-str()
-Biblioteka: base
-Opis: Wyświetla podsumowanie struktury obiektu.
+str()\
+Biblioteka: base\
+Opis: Wyświetla podsumowanie struktury obiektu.\
 
-as.data.frame()
-Biblioteka: base
-Opis: Konwertuje obiekt na ramkę danych.
+as.data.frame()\
+Biblioteka: base\
+Opis: Konwertuje obiekt na ramkę danych.\
 
-seq()
-Biblioteka: base
-Opis: Generuje sekwencję liczb.
+seq()\
+Biblioteka: base\
+Opis: Generuje sekwencję liczb.\
 
-as.vector()
-Biblioteka: base
-Opis: Konwertuje obiekt na wektor.
+as.vector()\
+Biblioteka: base\
+Opis: Konwertuje obiekt na wektor.\
 
-rownames()
-Biblioteka: base
-Opis: Ustawia lub zwraca nazwy wierszy ramki danych.
+rownames()\
+Biblioteka: base\
+Opis: Ustawia lub zwraca nazwy wierszy ramki danych.\
 
-substr()
-Biblioteka: base
-Opis: Wybiera podciąg znaków na podstawie określonej pozycji początkowej i końcowej.
+substr()\
+Biblioteka: base\
+Opis: Wybiera podciąg znaków na podstawie określonej pozycji początkowej i końcowej.\
 
-as.integer()
-Biblioteka: base
-Opis: Konwertuje obiekt na typ całkowitoliczbowy.
+as.integer()\
+Biblioteka: base\
+Opis: Konwertuje obiekt na typ całkowitoliczbowy.\
 
-colnames()
-Biblioteka: base
-Opis: Ustawia lub zwraca nazwy kolumn ramki danych.
+colnames()\
+Biblioteka: base\
+Opis: Ustawia lub zwraca nazwy kolumn ramki danych.\
 
-as.double()
-Biblioteka: base
-Opis: Konwertuje obiekt na liczbę zmiennoprzecinkową.
+as.double()\
+Biblioteka: base\
+Opis: Konwertuje obiekt na liczbę zmiennoprzecinkową.\
 
-mean()
-Biblioteka: base
-Opis: Oblicza średnią wartość z wektora.
+mean()\
+Biblioteka: base\
+Opis: Oblicza średnią wartość z wektora.\
 
-sd()
-Biblioteka: base
-Opis: Oblicza odchylenie standardowe z wektora.
+sd()\
+Biblioteka: base\
+Opis: Oblicza odchylenie standardowe z wektora.\
 
-quantile()
-Biblioteka: base
-Opis: Oblicza kwantyle (np. medianę) z wektora.
+quantile()\
+Biblioteka: base\
+Opis: Oblicza kwantyle (np. medianę) z wektora.\
 
-var()
-Biblioteka: base
-Opis: Oblicza wariancję z wektora.
+var()\
+Biblioteka: base\
+Opis: Oblicza wariancję z wektora.\
 
-getmode()
-Biblioteka: własna definicja funkcji
-Opis: Oblicza dominanę z wektora.
+getmode()\
+Biblioteka: własna definicja funkcji\
+Opis: Oblicza dominanę z wektora.\
 
-kurtosis()
-Biblioteka: moments
-Opis: Oblicza kurtozę (miarę ogona rozkładu) z wektora.
+kurtosis()\
+Biblioteka: moments\
+Opis: Oblicza kurtozę (miarę ogona rozkładu) z wektora.\
 
-skewness()
-Biblioteka: moments
-Opis: Oblicza skośność (miarę asymetrii rozkładu) z wektora.
+skewness()\
+Biblioteka: moments\
+Opis: Oblicza skośność (miarę asymetrii rozkładu) z wektora.\
 
-data.frame()
-Biblioteka: base
-Opis: Tworzy ramkę danych z podanych wektorów lub kolumn.
+data.frame()\
+Biblioteka: base\
+Opis: Tworzy ramkę danych z podanych wektorów lub kolumn.\
 
-par()
-Biblioteka: base
-Opis: Ustawia parametry dla wykresów i innych elementów graficznych. Dzięki niej można na jednym obrazku umieścić kilka wykresów jednocześnie.
+par()\
+Biblioteka: base\
+Opis: Ustawia parametry dla wykresów i innych elementów graficznych. Dzięki niej można na jednym obrazku umieścić kilka wykresów jednocześnie.\
 
-hist()
-Biblioteka: base
-Opis: Tworzy histogram na podstawie podanych danych.
+hist()\
+Biblioteka: base\
+Opis: Tworzy histogram na podstawie podanych danych.\
 
-boxplot()
-Biblioteka: base
-Opis: Tworzy wykres pudełkowy (boxplot) na podstawie podanych danych.
+boxplot()\
+Biblioteka: base\
+Opis: Tworzy wykres pudełkowy (boxplot) na podstawie podanych danych.\
 
-ecdf()
-Biblioteka: base
-Opis: Oblicza funkcję dystrybuanty empirycznej dla podanych danych.
+ecdf()\
+Biblioteka: base\
+Opis: Oblicza funkcję dystrybuanty empirycznej dla podanych danych.\
 
-round()
-Biblioteka: base
-Opis: Zaokrągla liczby do określonej liczby miejsc po przecinku lub do najbliższej wartości całkowitej.
+round()\
+Biblioteka: base\
+Opis: Zaokrągla liczby do określonej liczby miejsc po przecinku lub do najbliższej wartości całkowitej.\
 
-cut()
-Biblioteka: base
-Opis: Dzieli dane na przedziały (klasy) na podstawie podanych punktów odcięcia.
+cut()\
+Biblioteka: base\
+Opis: Dzieli dane na przedziały (klasy) na podstawie podanych punktów odcięcia.\
 
-table()
-Biblioteka: base
-Opis: Tworzy tabelę częstości dla podanych danych.
+table()\
+Biblioteka: base\
+Opis: Tworzy tabelę częstości dla podanych danych.\
 
-plot()
-Biblioteka: base
-Opis: Tworzy wykres na podstawie podanych danych.
+plot()\
+Biblioteka: base\
+Opis: Tworzy wykres na podstawie podanych danych.\
 
-mutate()
-Biblioteka: dplyr
-Opis: Tworzy nowe zmienne lub modyfikuje istniejące w ramce danych na podstawie obliczeń lub transformacji.
+mutate()\
+Biblioteka: dplyr\
+Opis: Tworzy nowe zmienne lub modyfikuje istniejące w ramce danych na podstawie obliczeń lub transformacji.\
 
-slice()
-Biblioteka: dplyr
-Opis: Wybiera wiersze na podstawie ich pozycji lub warunków.
+slice()\
+Biblioteka: dplyr\
+Opis: Wybiera wiersze na podstawie ich pozycji lub warunków.\
 
-ungroup()
-Biblioteka: dplyr
-Opis: Usuwa grupowanie z ramki danych, przywracając oryginalną strukturę.
+ungroup()\
+Biblioteka: dplyr\
+Opis: Usuwa grupowanie z ramki danych, przywracając oryginalną strukturę.\
 
-ggplot()
-Biblioteka: ggplot2
-Opis: Tworzy obiekt wykresu ggplot, który może być dalej modyfikowany przez dodawanie warstw i ustawianie parametrów.
+ggplot()\
+Biblioteka: ggplot2\
+Opis: Tworzy obiekt wykresu ggplot, który może być dalej modyfikowany przez dodawanie warstw i ustawianie parametrów.\
 
 geom_point()
 Biblioteka: ggplot2
 Opis: Dodaje punkty do wykresu na podstawie danych.
 
-geom_line()
-Biblioteka: ggplot2
-Opis: Dodaje linie do wykresu na podstawie danych.
+geom_line()\
+Biblioteka: ggplot2\
+Opis: Dodaje linie do wykresu na podstawie danych.\
 
-theme()
-Biblioteka: ggplot2
-Opis: Ustawia różne aspekty wyglądu wykresu, takie jak osie, tytuły itp.
+theme()\
+Biblioteka: ggplot2\
+Opis: Ustawia różne aspekty wyglądu wykresu, takie jak osie, tytuły itp.\
 
-ggtitle()
-Biblioteka: ggplot2
-Opis: Ustawia tytuł wykresu.
+ggtitle()\
+Biblioteka: ggplot2\
+Opis: Ustawia tytuł wykresu.\
 
-labs()
-Biblioteka: ggplot2
-Opis: Ustawia etykiety osi na wykresie.
+labs()\
+Biblioteka: ggplot2\
+Opis: Ustawia etykiety osi na wykresie.\
 
-ggplotly()
-Biblioteka: plotly
-Opis: Konwertuje wykres ggplot na interaktywną wersję plotly.
+ggplotly()\
+Biblioteka: plotly\
+Opis: Konwertuje wykres ggplot na interaktywną wersję plotly.\
 
-t.test()
-Biblioteka: stats
-Opis: Wykonuje test t-studenta w celu weryfikacji hipotezy dotyczącej średniej populacji.
+t.test()\
+Biblioteka: stats\
+Opis: Wykonuje test t-studenta w celu weryfikacji hipotezy dotyczącej średniej populacji.\
 
-var.test()
-Biblioteka: stats
-Opis: Wykonuje test na równość wariancji między dwiema próbkami.
+var.test()\
+Biblioteka: stats\
+Opis: Wykonuje test na równość wariancji między dwiema próbkami.\
 
-cor.test()
-Biblioteka: stats
-Opis: Wykonuje test korelacji między dwiema zmiennymi.
+cor.test()\
+Biblioteka: stats\
+Opis: Wykonuje test korelacji między dwiema zmiennymi.\
