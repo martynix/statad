@@ -3,6 +3,7 @@ title: "Projekt z przedmiotu STATYSTYCZNA ANALIZA DANYCH"
 author: "Martyna Pitera"
 date: "2023-05-30"
 output:
+  github_document: default
   pdf_document: default
   html_document: default
   word_document: default
