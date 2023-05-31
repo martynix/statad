@@ -181,9 +181,11 @@ ggplotly(p)
 #Hipoteza dla średniej (zarobki ogółem)
 #H0: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) wynosi 4500
 #H1: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) nie wynosi 4500
-t.test(zarobki1$Ogolem, mu=4500)
+t.test(zarobki1[,2], mu=4500)
 
 #p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0
 
 #Hipoteza dla wariancji (zarobki ogółem) i dla sektora budownictwo
-var.test(zarobki1[,2], zarobki1[,4], mu=1000)
+var.test(zarobki1[,2], zarobki1[,4])
+
+cor.test(zarobki1[,3], zarobki1[,4])

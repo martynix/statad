@@ -23,83 +23,93 @@ setwd("C:/Users/marty/Desktop/GITHUB/statad")
 ```
 Dane zostały wczytane przy użyciu pakietu do wczytywania tabeli z pliku Excela. Następnie je uporządkowałam, tzn. usunęłam niepotrzebne wiersze oraz kolumny wypełnione wartościami NULL. Powstałej w ten sposób ramce danych nadałam nowe nazwy wierszy i kolumn.
 
-```{r, results="hide"}
+```{r, message=FALSE}
 #install.packages("readxl")
 library("readxl")
-
 zarobki <- read_excel("tabl19.xlsx")
-str(zarobki)
 zarobki <- as.data.frame(zarobki)
 zarobki <- zarobki[-(c(1,2,3,5)),]
+```
 
-#Utworzenie wektora liczb odpowiadających kolumnom które mają zotać usunięte
-#Począwszy od 3 kolumny, co druga zawiera same wartości NULL
+
+Utworzony poniżej wektor colrm zawiera liczby odpowiadające kolumnom, które mają zostać usunięte.
+Inaczej mówiąc, począwszy od kolumny trzeciej, co druga kolumna aż do dziewięćdziesiątej trzeciej ma zostać usunięta; zawierają one jedynie wartości NULL.
+
+Ramka danych o nazwie "zarobki" zawiera dane na temat wysokości wynagrodzenia dla wszystkich sektorów. Ramka "zarobki1" zawiera tylko pięć interesujących nas kolumn.
+
+
+```{r}
 colrm <- seq(from = 3, to = 93, by = 2)
 colrm <- as.vector(colrm)
-zarobki <- zarobki[,-colrm] #pełna tabela
-
-#Uporządkowanie nazw ramki danych
+zarobki <- zarobki[,-colrm] 
 zarobki <- zarobki[-1,]
 rownames(zarobki) <- seq(from = 1, to = 158, by = 1)
-zarobki1 <- zarobki[,c(1,2,45,33)] #tabela z wybranymi kolumnami, na których przeprowadzono obliczenia
+zarobki1 <- zarobki[,c(1,2,45,33)] 
 zarobki1$rok <- as.integer(substr(zarobki[,1], 1, 4))
 colnames(zarobki1) <- c("Okres", "Ogółem", "Informacja/komunikacja", "Budownictwo", "rok")
 ```
 
-Po wstępnej obróbce ramka danych zawierająca pożądane dane prezentuje się tak
+
+Po wstępnej obróbce ramka danych zawierająca pożądane dane prezentuje się tak:
 
 
 ```{r}
 zarobki1[1:10,1:4]
 ```
 
+
 ## Obliczanie wybranych parametrów statystyki opisowej
 Na podstawie ramki danych zarobki1 obliczyłam 8 parametrów statystyki opisowej dla każdej kolumny, w tym: średnią, odchylenie standardowe, medianę, współczynnik zmienności, wariancję, dominantę, kurtozę i skośność. Jednak by takie obliczenia były możliwe, wcześniej użyłam funkcji as.double(), aby nadać wartościom w ramce danych odpowiedni typ (double).
 
+odchylenie standardowe informuje o tym, jak szeroko wartości danej wielkości są rozrzucone wokół jej średniej. Im mniejsza wartość odchylenia tym obserwacje są bardziej skupione wokół średniej.
+
+Mediana to wartość środkowa w uporządkowanym ciągu liczb. Oznacza to, że 50% danych jest mniejszych lub równych medianie, a 50% danych jest większych lub równych medianie. 
+
+Współczynnik zmienności, podobnie jak odchylenie standardowe, należy do miar rozproszenia, służy więc do badania stopnia zróżnicowania wartości zmiennej. Wysoka wartość współczynnika oznacza duże zróżnicowanie cechy i świadczy o niejednorodności badanej populacji. Interpretacja wartości współczynnika zmienności:
+bardzo mała zmienność — poniżej 25 proc.,
+przeciętna zmienność — w przedziale od 25 proc. do 45 proc.,
+silna zmienność — od 45 proc. do 100 proc.,
+bardzo intensywna zmienność — powyżej 100 proc.
+
+Wariancja to średnia arytmetyczna kwadratów odchyleń poszczególnych wartości cechy jednostek zbiorowości od ich wartości średniej (arytmetycznej) – kwadrat odchylenia standardowego. 
+
+Dominanta wskazuje, jaka wartość występuje najczęściej w zbiorze wyników.
+
+Skośność – miara symetrii/asymetrii rozkładu. Jeśli rozkład jest idealnie symetryczny, wartość skośności wynosi zero. Z kolei jej wartości ujemne wskazuję na rozkład lewoskośny (wydłużone jest lewe ramię rozkładu), a dodatni na prawoskośny (wydłużone jest prawe ramię rozkładu).
+
+Kurtoza określa intensywność występowania wartości skrajnych, mierzy więc ona, co się dzieje w "ogonach" rozkładu.
+Wyższa kurtoza wskazuje, że dane mają grubsze ogony lub większe prawdopodobieństwo wystąpienia wartości skrajnych. Oznacza to, że istnieje większe prawdopodobieństwo wystąpienia obserwacji oddalonych od średniej.
+
 ```{r}
-#zamiana wierszy z zarobkami na strukturę DOUBLE by można było na nich wykonać obliczenia
 zarobki1[,2] <- as.double(zarobki1[,2])
 zarobki1[,3] <- as.double(zarobki1[,3])
 zarobki1[,4] <- as.double(zarobki1[,4])
 
-#1.średnia
 srednia1 <- mean(zarobki1[,2])
 srednia2 <- mean(zarobki1[,3])
 srednia3 <- mean(zarobki1[,4])
 
-#2.odchylenie standardowe
 ochdst1 <- sd(zarobki1[,2])
 ochdst2 <- sd(zarobki1[,3])
 ochdst3 <- sd(zarobki1[,4])
 
-#3.mediana
 mediana1 <- quantile(zarobki1[,2])
 mediana1 <- mediana1[3]
 
 mediana2 <- quantile(zarobki1[,3])
 mediana2 <- mediana2[3]
-mediana2
 
 mediana3 <- quantile(zarobki1[,4])
 mediana3 <- mediana3[3]
-mediana3
 
-#4.współczynnik zmienności
-wsp1 <- ochdst1/srednia1*100
+wsp1 <- ochdst1/srednia1
 wsp2<- ochdst2/srednia2 
 wsp3 <- ochdst3/srednia3
-```
 
-Współczynnik zmienności, podobnie jak odchylenie standardowe, należy do miar rozproszenia, służy więc do badania stopnia zróżnicowania wartości zmiennej. Wysoka wartość współczynnika oznacza duże zróżnicowanie cechy i świadczy o niejednorodności badanej populacji.
-
-
-```{r}
-#5.wariancja
 war1 <- var(zarobki1[,2])
 war2 <- var(zarobki1[,3])
 war3 <- var(zarobki1[,4])
 
-#6.dominanta
 getmode <- function(v) {
   uniqv <- unique(v)
   uniqv[which.max(tabulate(match(v, uniqv)))]
@@ -113,33 +123,31 @@ dom3 <- getmode(zarobki1[,4])
 Do obliczenia kurtozy i skośności użyłam funkcji kurtosis() i skewness() z biblioteki "moments".
 
 ```{r}
-#Instalacja pakietu moments do obliczenia kurtozy i skośności
 #install.packages("moments")
 library("moments")
 
-#7.kurtoza
 k1 <- kurtosis(zarobki1[,2])
 k2 <- kurtosis(zarobki1[,3])
 k3 <- kurtosis(zarobki1[,4])
 
-#8.skośność
 sk1 <- skewness(zarobki1[,2])
 sk2 <- skewness(zarobki1[,3])
 sk3 <- skewness(zarobki1[,4])
 ```
 
-Następnie stworzyłam ramkę danych zawierającą obliczone wyżej parametry.
+Następnie stworzyłam ramkę danych zawierającą obliczone wyżej parametry (param).
 
 ```{r}
-param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3),      "mediana"=c(mediana1,mediana2,mediana3),"współczynnik zmienności[%]"=c(wsp1,wsp2,wsp3), "wariancja"=c(war1,war2,war3), "dominanta"=c(dom1,dom2,dom3), "kurtoza"=c(k1,k2,k3), "skośność"=c(sk1,sk2,sk3))
+param <- data.frame("średnia" = c(srednia1,srednia2,srednia3), "odchylenie standardowe"=c(ochdst1,ochdst2,ochdst3), "mediana"=c(mediana1,mediana2,mediana3),"współczynnik zmienności[%]"=c(wsp1,wsp2,wsp3),  "wariancja"=c(war1,war2,war3), "dominanta"=c(dom1,dom2,dom3), "kurtoza"=c(k1,k2,k3), "skośność"=c(sk1,sk2,sk3))
 rownames(param) <- c("zarobki ogółem", "informacja/komunikacja", "budownictwo")  
-```
-
-```{r}
 param
 ```
 
-Patrząc na powyższą tabelę można wysnuć wniosek, iż:\
+Interpretacja wyników na przykładzie kolumny dotyczącej wynagrodzenia w sektorze informacji/komunikacji:
+Średnie miesięczne wynagrodzenie w tym sektorze wynosi 7979.005 zł brutto. Odchylenie standardowe przyjmuje większą wartość niż w przypadku dwóch pozostałych obserwacji, zatem wartości wynagrodzenia w sektorze informacji są najmocniej rozrzucone wokół średniej. Wartość środkowa wynosi 7550.26, co oznacza, że połowa wynagrodzeń jest niższa, a druga połowa równa lub wyższa od tej liczby.
+Współczynnik zmienności dla tego sektora wynosi 0.1984783, czyli mniej niż 25% - wartości zatem wykazują bardzo małą zmienność. Dominanta o wartości 5932.17 wskazuje najczęściej występującą wysokość miesięcznego wynagrodzenia w tym sektorze. Kurtoza wynosząca 2.801419 może wskazywać na grubsze ogony rozkładu. Skośność równa 0.8571349 sugeruje pewną asymetrię w rozkładzie danych.
+
+Patrząc na powyższą tabelę można także wysnuć ciekawy wniosek, że:\
 a. średnie wynagrodzenie brutto w sektorze budownictwa nie odbiega mocno od średniego wynagrodzenia dla ogółu sektorów,\
 b. średnie wynagrodzenie dla sektora informacji/komunikacji znacznie je przewyższa.\
 
@@ -164,19 +172,18 @@ hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wyso
 
 
 Średnie zarobki dla wszystkich cech zostały również zobrazowane na wykresie pudełkowym.
-
-
+Ten typ wykresu niesie ze sobą sporo różnych informacji na temat rozkładu mierzonej zmiennej.
 ```{r}
-#boxplot
 boxplot(zarobki1[,2:4],col='pink')
 ```
 
 Sporządziłam także wykres dystrybuanty empirycznej wysokości wynagrodzenia (Ogółem).
 Funkcja ecdf() wyświetla punkty skokowe.
+Dla "surowych" danych wykres dystrybuanty byłby nieczytelny z powodu bardzo dużej ilości punktów skokowych. Zmniejszyłam ich liczbę poprzez pogrupowanie danych i podział wartości na klasy. W wyniku tego działania otrzymałam wykres dystrybuanty empirycznej nie dla pojedynczych wartości, ale dla jedenastu przedziałów, w których poszczególne wartości się mieszczą. 
+Na osi poziomej znajdują się liczby będące środkami tych przedziałów.
 
 ```{r}
-ecdf(zarobki1[,2]) #funkcja wyświetlająca punkty skokowe na "surowych" danych
-#Pogrupowanie danych w celu zmniejszenia liczby punktów skokowych poprzez podział wartości na klasy
+ecdf(zarobki1[,2]) 
 ilosc_klas = 11
 klasy = seq(min(zarobki1[,2])-50, max(zarobki1[,2]), length.out = ilosc_klas+1)
 klasy <- round(klasy,digits=1)
@@ -188,7 +195,6 @@ cut(zarobki1[,2],klasy, dig.lab=10)
 przedzialy <- table(cut(zarobki1[,2],klasy,dig.lab=10))
 przedzialy
 
-#Dystrybuanta empiryczna na pogrupowanych danych
 ecdf(cut(zarobki1[,2],klasy, dig.lab=10))
 ecdf(cut(zarobki1[,2],klasy, dig.lab=10))(1:ilosc_klas)
 
@@ -199,11 +205,11 @@ plot(ecdf(cut(zarobki1[,2],klasy, dig.lab=10)), col="orange", col.lab="red", col
      xlab="Zarobki", ylab="Łączna częstość", main="Dystrybuanta wysokości zarobków (ogółem)", lwd=2, xaxt="n", las=1)
 axis(side=1, at=1:ilosc_klas, labels=klasy_srodki)
 ```
-\
+
+
 Kolejnym sporządzonym przeze mnie wykresem jest interaktywny wykres prezentujący zmiany średnich zarobków na przestrzeni lat.
 Po najechaniu myszką na wykres, pojawiają się szczegółowe informacje.
 Do stworzenia tego wykresu użyłam pakietów dplyr, tidyverse oraz plotly.
-
 
 ```{r}
 #install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
@@ -228,11 +234,17 @@ p <- (zarobki1) %>%
 ggplotly(p)
 ```
 
+
 ## Weryfikacja hipotez statystycznych
-Przy użyciu funkcji t.test oraz var.test zweryfikowałam dwa typy hipotez statystycznych dla kolumny "Ogółem". 
-W pierwszym typie zakładamy: \
-H0: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) wynosi 4500\
-H1: Średnia wysokość wynagrodzenia (zarobki1$Ogolem) nie wynosi 4500\
+
+Przy użyciu funkcji t.test oraz var.test zweryfikowałam dwa typy hipotez statystycznych. 
+
+
+## t.test
+Wynik testu t dla jednej próby służy do porównania średniej danej próby z pewną wartością oczekiwaną (w tym przypadku 4500).
+
+H0: Średnia wysokość miesięcznego wynagrodzenia (zarobki1$Ogolem) wynosi 4500\
+H1: Średnia wysokość miesięcznego wynagrodzenia (zarobki1$Ogolem) nie wynosi 4500\
 
 ```{r}
 t.test(zarobki1[,2], mu=4500)
@@ -240,9 +252,31 @@ t.test(zarobki1[,2], mu=4500)
 
 Ponieważ p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0.
 
-Dla drugiego typu:
+## var.test
+Kolejnym przeprowadzonym testem jest test F, służący do porównania dwóch wariancji. 
 
-#Hipoteza dla wariancji (zarobki ogółem)
-var.test(zarobki1[,2], zarobki1[,4], mu=1000)
+H0: Stosunek wariancji przeciętnego miesięcznego wynagrodzenia brutto Ogółem i w sektorze budownictwa wynosi 1\
+H1: Stosunek wariancji przeciętnego miesięcznego wynagrodzenia brutto Ogółem i w sektorze budownictwa nie wynosi 1\
+
+```{r}
+var.test(zarobki1[,2], zarobki1[,4])
+```
+
+Wartość F wynosi 1.0892, a liczba stopni swobody dla licznika i mianownika wynosi 157. \
+Ponieważ p-value > 1-0.95(confidence_level), nie ma podstaw do odrzucenia H0, co oznacza, że nie ma istotnych statystycznie różnic między wariancjami dwóch grup.
+
+
+## cor.test
+Trzecim przeprowadzonym testem jest test korelacji Pearsona.
+
+H0: Korelacja pomiędzy wysokościami miesięcznego wynagrodzenia dla sektorów informacji/komunikacji i budownictwa wynosi 0.
+H0: Korelacja pomiędzy wysokościami miesięcznego wynagrodzenia dla sektorów informacji/komunikacji i budownictwa nie wynosi 0.
+
+```{r}
+cor.test(zarobki1[,3], zarobki1[,4], mu=1000)
+```
+
+Wynik testu korelacji Pearsona wskazuje na bardzo silny i statystycznie istotny dodatni związek między tymi kolumnami.
+Ponieważ p-value < 2.2e-16, a zatem także p-value<0.05, to odrzucamy H0 na korzyść H1.
 
 ## Opis użytych funkcji
