@@ -172,9 +172,8 @@ hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wyso
 
 
 Średnie zarobki dla wszystkich cech zostały również zobrazowane na wykresie pudełkowym.
-Ten typ wykresu niesie ze sobą sporo różnych informacji na temat rozkładu mierzonej zmiennej.
-Górna linia pozioma wskazuje najwyższą wartość miesięcznego wynagrodzenia w danym sektorze, z kolei dolna linia pozioma - najniższy.
-
+Ten typ wykresu niesie ze sobą sporo różnych informacji na temat rozkładu mierzonej zmiennej.\
+Górna linia pozioma wskazuje najwyższą wartość miesięcznego wynagrodzenia w danym sektorze, z kolei dolna linia pozioma - najniższy.\
 Górna ściana "pudełka" to trzeci kwartyl, dolna to pierwszy kwartyl, a gruba pozioma kreska znajdująca się na "pudełku" to wartość mediany.
 
 ```{r}
@@ -206,7 +205,7 @@ srodki_czestosci <- data.frame("środki klas"=klasy_srodki, "częstości skumulo
 srodki_czestosci
 
 plot(ecdf(cut(zarobki1[,2],klasy, dig.lab=10)), col="orange", col.lab="red", col.main="red",
-     xlab="Zarobki", ylab="Łączna częstość", main="Dystrybuanta wysokości zarobków (ogółem)", lwd=2, xaxt="n", las=1)
+     xlab="Miesięczne wynagrodzenie", ylab="Łączna częstość", main="Dystrybuanta wysokości miesięcznego wynagrodzenia (ogółem)", lwd=2, xaxt="n", las=1)
 axis(side=1, at=1:ilosc_klas, labels=klasy_srodki)
 ```
 
@@ -215,7 +214,7 @@ Kolejnym sporządzonym przeze mnie wykresem jest interaktywny wykres prezentują
 Po najechaniu myszką na wykres, pojawiają się szczegółowe informacje.
 Do stworzenia tego wykresu użyłam pakietów dplyr, tidyverse oraz plotly.
 
-```{r}
+```{r,message=FALSE}
 #install.packages("dplyr") #bez tego pakietu funkcja %>% nie działa
 #install.packages("tidyverse")
 #installed.packages("plotly")
@@ -238,7 +237,7 @@ p <- (zarobki1) %>%
 ggplotly(p)
 ```
 
-Powyższy wykres świadczy o tym, że na przełomie ostatnich lat, wysokość przeciętnego miesięcznego wynagrodzenia stale wzrastała.
+Powyższy wykres świadczy o tym, że na przełomie ostatnich lat wysokość przeciętnego miesięcznego wynagrodzenia stale wzrastała.
 
 ## Weryfikacja hipotez statystycznych
 
