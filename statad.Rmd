@@ -173,6 +173,10 @@ hist(zarobki1[,4] , main="" , xlim=c(3000,10000), ylab="budownictwo", xlab="Wyso
 
 Średnie zarobki dla wszystkich cech zostały również zobrazowane na wykresie pudełkowym.
 Ten typ wykresu niesie ze sobą sporo różnych informacji na temat rozkładu mierzonej zmiennej.
+Górna linia pozioma wskazuje najwyższą wartość miesięcznego wynagrodzenia w danym sektorze, z kolei dolna linia pozioma - najniższy.
+
+Górna ściana "pudełka" to trzeci kwartyl, dolna to pierwszy kwartyl, a gruba pozioma kreska znajdująca się na "pudełku" to wartość mediany.
+
 ```{r}
 boxplot(zarobki1[,2:4],col='pink')
 ```
@@ -234,6 +238,7 @@ p <- (zarobki1) %>%
 ggplotly(p)
 ```
 
+Powyższy wykres świadczy o tym, że na przełomie ostatnich lat, wysokość przeciętnego miesięcznego wynagrodzenia stale wzrastała.
 
 ## Weryfikacja hipotez statystycznych
 
@@ -279,4 +284,188 @@ cor.test(zarobki1[,3], zarobki1[,4], mu=1000)
 Wynik testu korelacji Pearsona wskazuje na bardzo silny i statystycznie istotny dodatni związek między tymi kolumnami.
 Ponieważ p-value < 2.2e-16, a zatem także p-value<0.05, to odrzucamy H0 na korzyść H1.
 
+## Opis użytych bibliotek
+library(readxl)
+Biblioteka: readxl
+Opis: Udostępnia funkcje do odczytu danych z plików Excel (.xls, .xlsx) do ramki danych w R.
+
+library(moments)
+Biblioteka: moments
+Opis: Zapewnia narzędzia do analizy statystycznej i obliczania miar statystycznych, takich jak kurtoza, skośność itp.
+
+library(dplyr)
+Biblioteka: dplyr
+Opis: Udostępnia zestaw funkcji do przetwarzania danych w sposób logiczny i konkretny, np. filtrowanie, sortowanie, grupowanie, łączenie itp. Bez tego pakietu "%>%" nie zadziała.
+
+library(tidyverse)
+Biblioteka: tidyverse
+Opis: Zbiór pakietów, w tym dplyr, ggplot2, tidyr itp., które ułatwiają przetwarzanie, analizę i wizualizację danych.
+
+library(plotly)
+Biblioteka: plotly
+Opis: Zapewnia narzędzia do tworzenia interaktywnych wykresów, które można eksplorować i dostosowywać w przeglądarce.
+
 ## Opis użytych funkcji
+getwd()
+Biblioteka: base
+Opis: Zwraca bieżący katalog roboczy.
+
+setwd()
+Biblioteka: base
+Opis: Ustawia bieżący katalog roboczy na podany ścieżkę.
+
+read_excel()
+Biblioteka: readxl
+Opis: Wczytuje dane z pliku Excela do ramki danych.
+
+str()
+Biblioteka: base
+Opis: Wyświetla podsumowanie struktury obiektu.
+
+as.data.frame()
+Biblioteka: base
+Opis: Konwertuje obiekt na ramkę danych.
+
+seq()
+Biblioteka: base
+Opis: Generuje sekwencję liczb.
+
+as.vector()
+Biblioteka: base
+Opis: Konwertuje obiekt na wektor.
+
+rownames()
+Biblioteka: base
+Opis: Ustawia lub zwraca nazwy wierszy ramki danych.
+
+substr()
+Biblioteka: base
+Opis: Wybiera podciąg znaków na podstawie określonej pozycji początkowej i końcowej.
+
+as.integer()
+Biblioteka: base
+Opis: Konwertuje obiekt na typ całkowitoliczbowy.
+
+colnames()
+Biblioteka: base
+Opis: Ustawia lub zwraca nazwy kolumn ramki danych.
+
+as.double()
+Biblioteka: base
+Opis: Konwertuje obiekt na liczbę zmiennoprzecinkową.
+
+mean()
+Biblioteka: base
+Opis: Oblicza średnią wartość z wektora.
+
+sd()
+Biblioteka: base
+Opis: Oblicza odchylenie standardowe z wektora.
+
+quantile()
+Biblioteka: base
+Opis: Oblicza kwantyle (np. medianę) z wektora.
+
+var()
+Biblioteka: base
+Opis: Oblicza wariancję z wektora.
+
+getmode()
+Biblioteka: własna definicja funkcji
+Opis: Oblicza dominanę z wektora.
+
+kurtosis()
+Biblioteka: moments
+Opis: Oblicza kurtozę (miarę ogona rozkładu) z wektora.
+
+skewness()
+Biblioteka: moments
+Opis: Oblicza skośność (miarę asymetrii rozkładu) z wektora.
+
+data.frame()
+Biblioteka: base
+Opis: Tworzy ramkę danych z podanych wektorów lub kolumn.
+
+par()
+Biblioteka: base
+Opis: Ustawia parametry dla wykresów i innych elementów graficznych. Dzięki niej można na jednym obrazku umieścić kilka wykresów jednocześnie.
+
+hist()
+Biblioteka: base
+Opis: Tworzy histogram na podstawie podanych danych.
+
+boxplot()
+Biblioteka: base
+Opis: Tworzy wykres pudełkowy (boxplot) na podstawie podanych danych.
+
+ecdf()
+Biblioteka: base
+Opis: Oblicza funkcję dystrybuanty empirycznej dla podanych danych.
+
+round()
+Biblioteka: base
+Opis: Zaokrągla liczby do określonej liczby miejsc po przecinku lub do najbliższej wartości całkowitej.
+
+cut()
+Biblioteka: base
+Opis: Dzieli dane na przedziały (klasy) na podstawie podanych punktów odcięcia.
+
+table()
+Biblioteka: base
+Opis: Tworzy tabelę częstości dla podanych danych.
+
+plot()
+Biblioteka: base
+Opis: Tworzy wykres na podstawie podanych danych.
+
+mutate()
+Biblioteka: dplyr
+Opis: Tworzy nowe zmienne lub modyfikuje istniejące w ramce danych na podstawie obliczeń lub transformacji.
+
+slice()
+Biblioteka: dplyr
+Opis: Wybiera wiersze na podstawie ich pozycji lub warunków.
+
+ungroup()
+Biblioteka: dplyr
+Opis: Usuwa grupowanie z ramki danych, przywracając oryginalną strukturę.
+
+ggplot()
+Biblioteka: ggplot2
+Opis: Tworzy obiekt wykresu ggplot, który może być dalej modyfikowany przez dodawanie warstw i ustawianie parametrów.
+
+geom_point()
+Biblioteka: ggplot2
+Opis: Dodaje punkty do wykresu na podstawie danych.
+
+geom_line()
+Biblioteka: ggplot2
+Opis: Dodaje linie do wykresu na podstawie danych.
+
+theme()
+Biblioteka: ggplot2
+Opis: Ustawia różne aspekty wyglądu wykresu, takie jak osie, tytuły itp.
+
+ggtitle()
+Biblioteka: ggplot2
+Opis: Ustawia tytuł wykresu.
+
+labs()
+Biblioteka: ggplot2
+Opis: Ustawia etykiety osi na wykresie.
+
+ggplotly()
+Biblioteka: plotly
+Opis: Konwertuje wykres ggplot na interaktywną wersję plotly.
+
+t.test()
+Biblioteka: stats
+Opis: Wykonuje test t-studenta w celu weryfikacji hipotezy dotyczącej średniej populacji.
+
+var.test()
+Biblioteka: stats
+Opis: Wykonuje test na równość wariancji między dwiema próbkami.
+
+cor.test()
+Biblioteka: stats
+Opis: Wykonuje test korelacji między dwiema zmiennymi.
