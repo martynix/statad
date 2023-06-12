@@ -241,7 +241,7 @@ p <- (zarobki1) %>%
   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1)) +
   ggtitle("Średnie miesięczne wynagrodzenie brutto na przestrzeni lat 2010-2023") + 
   labs(x="Rok", y="Wynagrodzenie")
-ggplotly(p)
+#ggplotly(p)
 plot(p)
 
 ```
